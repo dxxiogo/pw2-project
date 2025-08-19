@@ -1,7 +1,6 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Home, ShoppingCart, Search, CreditCard, FileText, LogOut } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 type NavItem = {
   icon: React.ElementType;
@@ -15,7 +14,8 @@ type SidebarProps = {
 
 const Sidebar = ({ onNavigation }: SidebarProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const router = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems: NavItem[] = [
     { icon: Home, label: 'Home', href: '/home' },
@@ -26,12 +26,21 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
     { icon: LogOut, label: 'Sair', href: '/logout' }
   ];
 
+  useEffect(() => {
+    const index = navItems.findIndex(item => location.pathname.startsWith(item.href));
+    if (index !== -1) {
+      setActiveIndex(index);
+    }
+  }, [location.pathname]);
+
   const handleClick = (index: number, item: NavItem) => {
     setActiveIndex(index);
     if (onNavigation) {
       onNavigation(item);
     }
-   
+    if (item.href) {
+      navigate(item.href);
+    }
   };
 
   return (
@@ -52,10 +61,7 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
               title={item.label}
               aria-label={item.label}
             >
-              <IconComponent 
-                size={24} 
-                className="text-white drop-shadow-sm"
-              />
+              <IconComponent size={24} className="text-white drop-shadow-sm" />
               <div className="
                 absolute left-full ml-3 px-3 py-2 
                 bg-gray-900 text-white text-sm rounded-md 
@@ -84,10 +90,7 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
           title="Sair"
           aria-label="Sair"
         >
-          <LogOut 
-            size={24} 
-            className="text-white drop-shadow-sm"
-          />
+          <LogOut size={24} className="text-white drop-shadow-sm" />
           <div className="
             absolute left-full ml-3 px-3 py-2 
             bg-gray-900 text-white text-sm rounded-md 
