@@ -1,5 +1,6 @@
 // src/routes/AppRouter.tsx
 
+import Home from "@/pages/home/Home.tsx";
 import Item from "@/pages/item/Item.tsx";
 import Login from "@/pages/Login.tsx";
 import Order from "@/pages/order/Order.tsx";
@@ -9,18 +10,16 @@ import Restaurant from "@/pages/restaurant/Restaurant.tsx";
 import RestaurantRegistration from "@/pages/restaurant/RestaurantRegistration.tsx";
 import SignUp from "@/pages/SignUp.tsx";
 import WelcomePage from "@/pages/WelcomePage.tsx";
-import { Home } from "lucide-react";
 import { JSX } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 
-// Simulação de autenticação (troque depois por contexto real de auth)
 const useAuth = () => {
   const user = localStorage.getItem("user");
-  return !!user;
+  return user;
 };
 
-// Componente de rota privada
+
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const isAuth = useAuth();
   return isAuth ? children : <Navigate to="/login" replace />;
@@ -30,13 +29,11 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rotas Públicas */}
-        <Route path="/" element={<WelcomePage />} />
+        <Route path="/" element={ useAuth() ? <Home/> : <WelcomePage /> } />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/restaurant-registration" element={<RestaurantRegistration />} />
 
-        {/* Rotas Privadas */}
         <Route
           path="/home"
           element={
@@ -62,7 +59,6 @@ export default function AppRouter() {
           }
         />
 
-        {/* Fluxo de pedido */}
         <Route
           path="/order"
           element={
@@ -88,7 +84,6 @@ export default function AppRouter() {
           }
         />
 
-        {/* Rota padrão caso não encontre */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
