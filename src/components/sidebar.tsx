@@ -44,7 +44,7 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
   };
 
   return (
-    <nav className="w-16 bg-red-600 flex flex-col items-center py-4 h-full shadow-lg z-30">
+    <nav className="w-16 bg-red-600 flex flex-col items-center py-4 h-full fixed shadow-lg z-30">
       <div className="flex flex-col items-center space-y-6 flex-1">
         {navItems.slice(0, -1).map((item, index) => {
           const IconComponent = item.icon;

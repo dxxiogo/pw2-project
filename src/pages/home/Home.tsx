@@ -52,7 +52,7 @@ export default function Home() {
           const reviews = await res.json();
           let rating = rest.rating;
           if (reviews.length > 0) {
-            rating = reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / reviews.length;
+            rating = reviews.reduce((acc: number, r: Restaurant) => acc + r.rating, 0) / reviews.length;
           }
           return { ...rest, rating, reviews: reviews.length };
         })
@@ -111,7 +111,7 @@ export default function Home() {
  <section className="mt-8 px-8">
           <h2 className="text-xl font-bold mb-4">Restaurantes</h2>
           <div className="flex gap-4 overflow-x-auto">
-            {restaurants.map((rest: any) => (
+            {restaurants.map((rest: Restaurant) => (
               <Link key={rest.id} to={`/restaurant/${rest.id}`} className="block">
                 <RestaurantPreview
                   name={rest.name}

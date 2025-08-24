@@ -44,6 +44,14 @@ export default function WelcomePage() {
               Entrar
             </FilledButton>
           </Link>
+          <Link to="/restaurant-login">
+            <FilledButton
+              colorClass="bg-transparent text-red-600 hover:bg-red-600 hover:text-white border border-red-600 hover:border-transparent"
+              className="w-full h-12 text-lg cursor-pointer"
+            >
+              Meu restaurante
+            </FilledButton>
+          </Link>
         </div>
       </div>
       {/* Coluna da direita: imagem hamburguer */}
