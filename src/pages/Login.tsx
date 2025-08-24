@@ -26,9 +26,11 @@ export default function Login() {
     if (!res.ok) throw new Error("Falha na conexão com o servidor.");
 
     const data = await res.json();
+    
 
     if (data.length > 0) {
-      localStorage.setItem("user", JSON.stringify(data[0]));
+      const user =data[0];
+      localStorage.setItem("user", JSON.stringify({ id: user.id}));
       navigate("/home");
     } else {
       setErrorMsg("Email ou senha inválidos!");

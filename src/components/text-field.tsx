@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 
 type PlaceholderInputProps = {
+  name?:string
   className?: string;
   placeholder?: string;
   value: string;
@@ -8,10 +9,11 @@ type PlaceholderInputProps = {
   type?: string;
 };
 
-const PlaceholderInput = ({ className = '', placeholder, value, onChange, type }: PlaceholderInputProps) => {
+const PlaceholderInput = ({ name,className = '', placeholder, value, onChange, type }: PlaceholderInputProps) => {
   return (
     <div className={className}>
       <input
+      name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}

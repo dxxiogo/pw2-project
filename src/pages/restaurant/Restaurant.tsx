@@ -135,7 +135,7 @@ export default function Restaurant() {
           <div className="flex-1 space-y-2">
             <h1 className="text-3xl font-bold">{restaurant.name}</h1>
             <p className="text-gray-600">{restaurant.description}</p>
-            <StarRating rating={Number(restaurant.rating.toFixed(1))} />
+            <StarRating rating={restaurant.rating} />
             <p className="text-sm text-gray-500">{restaurant.reviews} avaliações</p>
           </div>
         </section>
