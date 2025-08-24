@@ -1,61 +1,63 @@
-import { ChevronRight, Star } from 'lucide-react';
+import React from "react";
+import { Star } from "lucide-react";
 
-const restaurantPreview = () => {
+type RestaurantPreviewProps = {
+  name: string;
+  description?: string;
+  rating?: number; // nota do restaurante
+  reviews?: number;
+  image?: string;
+};
+
+const RestaurantPreview = ({
+  name,
+  description = "Um restaurante incrível",
+  rating = 0,
+  reviews = 0,
+  image = "/assets/placeholder.png"
+}: RestaurantPreviewProps) => {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStar;
+
   return (
-    <div className="flex w-3/4  bg-white rounded-xl shadow-md overflow-hidden   border border-gray-100">
-      <div className="bg-black flex items-center justify-center p-4 w-24 flex-shrink-0">
-        <div className="text-white text-center">
-          
-          <div className="mb-2">
-            <div className="flex justify-center space-x-1">
-              <div className="w-1 h-4 bg-white rounded-full transform rotate-12"></div>
-              <div className="w-1 h-5 bg-white rounded-full"></div>
-              <div className="w-1 h-4 bg-white rounded-full transform -rotate-12"></div>
-              <div className="w-1 h-3 bg-white rounded-full transform rotate-45"></div>
-            </div>
-          </div>
-          
-          <div className="mb-2">
-            <div className="w-10 h-6 bg-white rounded-full mx-auto relative">
-              <div className="absolute top-1 left-2 w-0.5 h-0.5 bg-black rounded-full"></div>
-              <div className="absolute top-1 right-2 w-0.5 h-0.5 bg-black rounded-full"></div>
-              <div className="absolute top-2 left-3 w-0.5 h-0.5 bg-black rounded-full"></div>
-              <div className="absolute top-2 right-3 w-0.5 h-0.5 bg-black rounded-full"></div>
-              <div className="absolute top-3 left-2.5 w-0.5 h-0.5 bg-black rounded-full"></div>
-              <div className="absolute top-3 right-2.5 w-0.5 h-0.5 bg-black rounded-full"></div>
-            </div>
-          </div>
-          
-          <div className="text-white font-bold text-sm tracking-wider leading-tight">
-            <div>LA</div>
-            <div>BRASA</div>
-          </div>
-        </div>
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 w-64 flex-shrink-0 overflow-hidden">
+      <div className="relative h-48 bg-gray-100 overflow-hidden">
+        <img src={image} alt={name} className="w-full h-full object-cover" />
       </div>
 
-      <div className="flex-1 p-3 flex flex-col justify-between min-h-0">
-        <div className="flex-1">
-          <h2 className="text-lg font-semibold text-gray-900 mb-1">La Brasa</h2>
-          <p className="text-gray-400 text-xs mb-3 leading-relaxed">
-            Um restaurante moderno com uma culinária tradicional
-          </p>
-          
-          <div className="flex items-center ">
-            <Star className="w-3 h-3 text-yellow-400 fill-current" />
-            <span className="ml-1 text-sm font-medium text-gray-900">4.1</span>
-            <span className="ml-1 text-xs text-gray-400">(12273)</span>
+      <div className="p-4">
+        <div className="flex justify-between items-start mb-2">
+          <h2 className="text-lg font-semibold text-gray-900">{name}</h2>
+
+          <div className="flex items-center space-x-0.5">
+            {/* estrelas cheias */}
+            {Array.from({ length: fullStars }).map((_, i) => (
+              <Star key={`full-${i}`} className="w-4 h-4 text-yellow-400 fill-current" />
+            ))}
+
+            {/* meia estrela */}
+            {halfStar === 1 && (
+              <div className="relative w-4 h-4">
+                <Star className="w-4 h-4 text-gray-300 fill-current absolute top-0 left-0" />
+                <div className="absolute top-0 left-0 w-1/2 overflow-hidden">
+                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                </div>
+              </div>
+            )}
+
+            {/* estrelas vazias */}
+            {Array.from({ length: emptyStars }).map((_, i) => (
+              <Star key={`empty-${i}`} className="w-4 h-4 text-gray-300 fill-current" />
+            ))}
+
+            {/* valor numérico */}
+            <span className="ml-1 text-sm text-gray-900">{rating}</span>
           </div>
-          
-        </div>
-        
-        <div className="flex justify-end mt-2">
-          <button className="p-1 hover:bg-gray-50 rounded-full transition-colors duration-200">
-            <ChevronRight className="w-4 h-4 text-gray-500" />
-          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default restaurantPreview;
+export default RestaurantPreview;

@@ -23,7 +23,7 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
     { icon: Search, label: 'Buscar', href: '/buscar' },
     { icon: CreditCard, label: 'Pagamentos', href: '/pagamentos' },
     { icon: FileText, label: 'Documentos', href: '/documentos' },
-    { icon: LogOut, label: 'Sair', href: '/logout' }
+    { icon: LogOut, label: 'Sair', href: '/welcomepage' }
   ];
 
   useEffect(() => {

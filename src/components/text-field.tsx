@@ -1,19 +1,22 @@
+import { ChangeEvent } from 'react';
 
-import { useState } from 'react';
-
-type PlaceholderInputProps =  {
+type PlaceholderInputProps = {
   className?: string;
   placeholder?: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
 };
 
-const PlaceholderInput = ({ className = '', placeholder}: PlaceholderInputProps) => {
-  const [value, setValue] = useState('');
-
+const PlaceholderInput = ({ className = '', placeholder, value, onChange, type }: PlaceholderInputProps) => {
   return (
     <div className={className}>
       <input
-      placeholder={placeholder}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className={`w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${className || ''}`}
+        type={type}
       />
     </div>
   );
