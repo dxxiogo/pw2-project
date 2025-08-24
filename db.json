@@ -1,0 +1,98 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "teste@teste.com",
+      "password": "123456",
+      "name": "João",
+      "address": {
+        "lat": -23.55052,
+        "lng": -46.633308
+      }
+    },
+    {
+      "id": 2,
+      "email": "admin@teste.com",
+      "password": "admin",
+      "name": "Maria",
+      "address": {
+        "lat": -23.561684,
+        "lng": -46.655981
+      }
+    }
+  ],
+
+  "restaurants": [
+    {
+      "id": 1,
+      "name": "Mansão Restaurante",
+      "address": {
+        "lat": -23.559616,
+        "lng": -46.658693
+      },
+      "rating":"3.5",
+      "email":"mansaores@gmail.com",
+      "password":"123456",
+      "image": "/assets/pizza.jpeg",
+      "items":[1,2]
+    },
+    {
+      "id": 2,
+      "name": "Hamburgueria da Maria",
+      "address": {
+        "lat": -23.5629,
+        "lng": -46.6395
+      },
+      "rating":"4",
+      "email":"hamburguerMaria@gmail.com",
+      "password":"123456",
+      "image": "/assets/hamburguer.png",
+      "items":[3,4]
+    }
+  ],
+
+  "items": [
+    {
+      "id": 1,
+      "restaurantId": 1,
+      "name": "Pizza de Mussarela",
+      "price": 35.0,
+      "image": "/assets/pizza.jpeg"
+    },
+    {
+      "id": 2,
+      "restaurantId": 1,
+      "name": "Panqueca",
+      "price": 40.0,
+      "image": "/assets/panqueca.png"
+    },
+    {
+      "id": 3,
+      "restaurantId": 2,
+      "name": "X-Burger",
+      "price": 25.0,
+      "image": "/assets/hamburguer.png"
+    },
+    {
+      "id": 4,
+      "restaurantId": 2,
+      "name": "X-Salada",
+      "price": 28.0,
+      "image": "/assets/hamburguer.png"
+    }
+  ],
+
+  "orders": [
+    {
+      "id": 1,
+      "userId": 1,
+      "restaurantId": 2,
+      "items": [3],
+      "status": "pending",
+      "address": {
+        "lat": -23.55052,
+        "lng": -46.633308
+      }
+    }
+  ]
+}
