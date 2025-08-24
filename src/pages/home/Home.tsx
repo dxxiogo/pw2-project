@@ -44,10 +44,25 @@ export default function Home() {
       .then((res) => {
         if (!res.ok) throw new Error("Falha ao carregar restaurantes");
         return res.json();
-      })
-      .then((data: Restaurant[]) => setRestaurants(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoadingRestaurants(false));
+      }).then(async (restaurantsData: Restaurant[]) => {
+      // Buscar todas as reviews de cada restaurante
+      const updatedRestaurants = await Promise.all(
+        restaurantsData.map(async (rest) => {
+          const res = await fetch(`http://localhost:3001/reviews?restaurantId=${rest.id}`);
+          const reviews = await res.json();
+          let rating = rest.rating;
+          if (reviews.length > 0) {
+            rating = reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / reviews.length;
+          }
+          return { ...rest, rating, reviews: reviews.length };
+        })
+      );
+      setRestaurants(updatedRestaurants);
+    })
+    .catch((err) => setError(err.message))
+    .finally(() => setLoadingRestaurants(false));
+      
+      
   }, []);
 
   // filtros de busca
@@ -101,7 +116,7 @@ export default function Home() {
                 <RestaurantPreview
                   name={rest.name}
                   image={rest.image}
-                  rating={rest.rating}
+                  rating={Number(rest.rating.toFixed(1))}
                   reviews={rest.reviews}
                   description={rest.description}
                 />

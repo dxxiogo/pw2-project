@@ -11,9 +11,7 @@ type RestaurantPreviewProps = {
 
 const RestaurantPreview = ({
   name,
-  description = "Um restaurante incrível",
   rating = 0,
-  reviews = 0,
   image = "/assets/placeholder.png"
 }: RestaurantPreviewProps) => {
   const fullStars = Math.floor(rating);
