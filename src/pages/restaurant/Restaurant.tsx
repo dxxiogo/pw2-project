@@ -61,18 +61,16 @@ export default function Restaurant() {
       .then(res => res.json())
       .then(data => setRestaurant(data));
 
-    // Buscar itens do restaurante
     fetch(`http://localhost:3001/items?restaurantId=${id}`)
       .then(res => res.json())
       .then(data => setItems(data));
 
-    // Buscar reviews e atualizar média
     fetch(`http://localhost:3001/reviews?restaurantId=${id}`)
       .then(res => res.json())
       .then(data => {
         setReviews(data);
         if (data.length > 0) {
-          const media = data.reduce((acc: number, r: any) => acc + r.rating, 0) / data.length;
+          const media = data.reduce((acc: number, r: Review) => acc + r.rating, 0) / data.length;
           setRestaurant(prev => prev ? { ...prev, rating: media, reviews: data.length } : prev);
         }
       });
