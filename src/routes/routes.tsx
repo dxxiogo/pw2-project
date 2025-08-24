@@ -1,4 +1,3 @@
-// src/routes/AppRouter.tsx
 import Home from "@/pages/home/Home.tsx";
 import Item from "@/pages/item/Item.tsx";
 import Login from "@/pages/Login.tsx";
@@ -6,87 +5,116 @@ import Order from "@/pages/order/Order.tsx";
 import OrderAddress from "@/pages/order/OrderAddress.tsx";
 import OrderProcessing from "@/pages/order/OrderProcessing.tsx";
 import Restaurant from "@/pages/restaurant/Restaurant.tsx";
+import RestaurantLogin from "@/pages/restaurant/RestaurantLogin.tsx";
 import RestaurantRegistration from "@/pages/restaurant/RestaurantRegistration.tsx";
+import RestaurantHome from "@/pages/restaurant/RestaurantHome.tsx"; // novo
 import SignUp from "@/pages/SignUp.tsx";
 import WelcomePage from "@/pages/WelcomePage.tsx";
+
 import { JSX } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ItemCreate from "@/pages/item/ItemCreate.tsx";
 
-// hook para verificar autenticação
-const useAuth = () => {
+const useUserAuth = () => {
   const user = localStorage.getItem("user");
-  return !!user; // true ou false
+  return !!user;
 };
 
-// componente de rota privada
-function PrivateRoute({ children }: { children: JSX.Element }) {
-  const isAuth = useAuth();
+const useRestaurantAuth = () => {
+  const restaurant = localStorage.getItem("restaurant");
+  return !!restaurant;
+};
+
+function PrivateUserRoute({ children }: { children: JSX.Element }) {
+  const isAuth = useUserAuth();
   return isAuth ? children : <Navigate to="/login" replace />;
+}
+
+function PrivateRestaurantRoute({ children }: { children: JSX.Element }) {
+  const isAuth = useRestaurantAuth();
+  return isAuth ? children : <Navigate to="/restaurant-login" replace />;
 }
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rota inicial sempre WelcomePage */}
+        {/* Público */}
         <Route path="/" element={<WelcomePage />} />
-
-        {/* Autenticação */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/restaurant-registration" element={<RestaurantRegistration />} />
+        <Route path="/restaurant-login" element={<RestaurantLogin />} />
 
-        {/* Rotas privadas */}
+        {/* Cliente */}
         <Route
           path="/home"
           element={
-            <PrivateRoute>
+            <PrivateUserRoute>
               <Home />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/restaurant/:id"
-          element={
-            <PrivateRoute>
-              <Restaurant />
-            </PrivateRoute>
+            </PrivateUserRoute>
           }
         />
         <Route
           path="/item/:id"
           element={
-            <PrivateRoute>
+            <PrivateUserRoute>
               <Item />
-            </PrivateRoute>
+            </PrivateUserRoute>
           }
         />
         <Route
           path="/order"
           element={
-            <PrivateRoute>
+            <PrivateUserRoute>
               <Order />
-            </PrivateRoute>
+            </PrivateUserRoute>
           }
         />
         <Route
           path="/order/address"
           element={
-            <PrivateRoute>
+            <PrivateUserRoute>
               <OrderAddress />
-            </PrivateRoute>
+            </PrivateUserRoute>
           }
         />
         <Route
           path="/order/processing"
           element={
-            <PrivateRoute>
+            <PrivateUserRoute>
               <OrderProcessing />
-            </PrivateRoute>
+            </PrivateUserRoute>
           }
         />
 
-        {/* Rota coringa */}
+        {/* Restaurante */}
+        <Route
+          path="/restaurant/:id"
+          element={
+            <PrivateRestaurantRoute>
+              <Restaurant />
+            </PrivateRestaurantRoute>
+          }
+        />
+        <Route
+          path="/restaurant/home"
+          element={
+            <PrivateRestaurantRoute>
+              <RestaurantHome />
+            </PrivateRestaurantRoute>
+          }
+        />
+        <Route
+          path="/restaurant/create-item"
+          element={
+            <PrivateRestaurantRoute>
+              <ItemCreate />
+            </PrivateRestaurantRoute>
+          }
+        />
+
+        {/* fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
