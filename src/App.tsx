@@ -1,12 +1,11 @@
-import AppRouter from "./routes/routes.tsx"
+import { Provider } from "react-redux";
+import AppRouter from "@/routes/routes.tsx";
+import {store} from "@/store/store.ts";
 
-function App() {
-
+export default function App() {
   return (
-    <>
-     <AppRouter/>
-    </>
-  )
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
+  );
 }
-
-export default App
