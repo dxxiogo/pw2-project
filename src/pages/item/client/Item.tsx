@@ -1,5 +1,5 @@
-import FilledButton from "../../components/filled-button.tsx";
-import Sidebar from "../../components/sidebar.tsx";
+import FilledButton from "../../../components/filled-button.tsx";
+import Sidebar from "../../../components/sidebar.tsx";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 

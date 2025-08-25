@@ -1,5 +1,5 @@
 import Home from "@/pages/home/Home.tsx";
-import Item from "@/pages/item/Item.tsx";
+import Item from "@/pages/item/client/Item.tsx";
 import Login from "@/pages/Login.tsx";
 import Order from "@/pages/order/Order.tsx";
 import OrderAddress from "@/pages/order/OrderAddress.tsx";
@@ -13,7 +13,8 @@ import WelcomePage from "@/pages/WelcomePage.tsx";
 
 import { JSX } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ItemCreate from "@/pages/item/ItemCreate.tsx";
+import ItemCreate from "@/pages/item/restaurant/ItemCreate.tsx";
+import RestaurantItemView from "@/pages/item/restaurant/RestaurantItemView.tsx";
 
 const useUserAuth = () => {
   const user = localStorage.getItem("user");
@@ -39,14 +40,13 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Público */}
+
         <Route path="/" element={<WelcomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/restaurant-registration" element={<RestaurantRegistration />} />
         <Route path="/restaurant-login" element={<RestaurantLogin />} />
 
-        {/* Cliente */}
         <Route
           path="/home"
           element={
@@ -88,7 +88,6 @@ export default function AppRouter() {
           }
         />
 
-        {/* Restaurante */}
         <Route
           path="/restaurant/:id"
           element={
@@ -106,6 +105,14 @@ export default function AppRouter() {
           }
         />
         <Route
+          path="/restaurant/item/:id"
+          element={
+            <PrivateRestaurantRoute>
+              <RestaurantItemView />
+            </PrivateRestaurantRoute>
+          }
+        />
+        <Route
           path="/restaurant/create-item"
           element={
             <PrivateRestaurantRoute>
@@ -113,8 +120,15 @@ export default function AppRouter() {
             </PrivateRestaurantRoute>
           }
         />
+        <Route
+          path="/restaurant/edit-item/:id"
+          element={
+            <PrivateRestaurantRoute>
+              <ItemCreate />
+            </PrivateRestaurantRoute>
+          }
+        />
 
-        {/* fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

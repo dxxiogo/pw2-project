@@ -55,7 +55,7 @@ export default function RestaurantHome() {
           ) : filteredItems.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {filteredItems.map((item) => (
-                <Link key={item.id} to={`/item/${item.id}`}>
+                <Link key={item.id} to={`/restaurant/item/${item.id}`}>
                   <ItemPreview
                     name={item.name}
                     image={item.image}
