@@ -21,7 +21,6 @@ const initialState: AuthState = {
 };
 
 
-// Login restaurante
 export const loginRestaurant = createAsyncThunk(
   "restaurantAuth/loginRestaurant",
   async ({ email, password }: { email: string; password: string }, thunkAPI) => {
@@ -58,13 +57,26 @@ export const registerRestaurant = createAsyncThunk(
     thunkAPI
   ) => {
     try {
+      // pega todos os restaurantes pra calcular próximo ID
+      const resAll = await fetch("http://localhost:3001/restaurants");
+      const restaurants = await resAll.json();
+
+      const nextId =
+        restaurants.length > 0
+          ? Math.max(...restaurants.map((r: Restaurant) => Number(r.id) || 0)) + 1
+          : 1;
+
+
+      const newRestaurant = { id: nextId, name, email, cnpj, password };
+
       const res = await fetch("http://localhost:3001/restaurants", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, cnpj, password }),
+        body: JSON.stringify(newRestaurant),
       });
 
-      if (!res.ok) return thunkAPI.rejectWithValue("Erro ao cadastrar restaurante");
+      if (!res.ok)
+        return thunkAPI.rejectWithValue("Erro ao cadastrar restaurante");
 
       const restaurant = await res.json();
       localStorage.setItem("restaurant", JSON.stringify(restaurant));
@@ -74,6 +86,7 @@ export const registerRestaurant = createAsyncThunk(
     }
   }
 );
+
 
 
 const restaurantAuthSlice = createSlice({
