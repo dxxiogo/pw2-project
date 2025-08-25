@@ -148,7 +148,49 @@
           "note": ""
         }
       ],
-      "status": "pending"
+      "status": "confirmed",
+      "paymentMethod": "Cartão de crédito",
+      "address": {
+        "lat": null,
+        "lng": null
+      }
+    },
+    {
+      "id": "73c7",
+      "userId": "1",
+      "restaurantId": 1,
+      "items": [
+        {
+          "id": "1",
+          "name": "Pizza de Mussarela",
+          "quantity": 2,
+          "price": 35,
+          "note": ""
+        }
+      ],
+      "status": "confirmed",
+      "paymentMethod": "PIX",
+      "address": {
+        "lat": null,
+        "lng": null
+      }
+    },
+    {
+      "id": "19b8",
+      "userId": "1",
+      "restaurantId": 1,
+      "items": [
+        {
+          "id": "1",
+          "name": "Pizza de Mussarela",
+          "quantity": 2,
+          "price": 35,
+          "note": ""
+        }
+      ],
+      "status": "confirmed",
+      "paymentMethod": "Cartão de crédito",
+      "address": "dsadas"
     }
   ],
   "reviews": [

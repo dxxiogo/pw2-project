@@ -20,9 +20,6 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
   const navItems: NavItem[] = [
     { icon: Home, label: 'Home', href: '/home' },
     { icon: ShoppingCart, label: 'Carrinho', href: '/order' },
-    { icon: Search, label: 'Buscar', href: '/buscar' },
-    { icon: CreditCard, label: 'Pagamentos', href: '/pagamentos' },
-    { icon: FileText, label: 'Documentos', href: '/documentos' },
     { icon: LogOut, label: 'Sair', href: '/welcomepage' }
   ];
 
