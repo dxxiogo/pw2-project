@@ -82,7 +82,7 @@ export default function Home() {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="flex-1 bg-white">
+      <div className="flex-1 bg-white ml-10">
         <HeaderSearch
           location="Cajazeiras, PB"
           placeholder="Busque restaurantes ou itens..."
@@ -126,5 +126,6 @@ export default function Home() {
         </section>
       </div>
     </div>
+
   );
 }
