@@ -11,13 +11,15 @@ interface AuthState {
   restaurant: Restaurant | null;
   loading: boolean;
   error: string | null;
+  items: Item[];
 }
-
 const initialState: AuthState = {
   restaurant: JSON.parse(localStorage.getItem("restaurant") || "null"),
   loading: false,
   error: null,
+  items: [],
 };
+
 
 // Login restaurante
 export const loginRestaurant = createAsyncThunk(
@@ -42,8 +44,13 @@ export const loginRestaurant = createAsyncThunk(
   }
 );
 
+type Item = {
+  id: number;
+  name: string;
+  price: number;
+  restaurantId: number;
+};
 
-// Cadastro restaurante
 export const registerRestaurant = createAsyncThunk(
   "restaurantAuth/registerRestaurant",
   async (
@@ -103,7 +110,7 @@ const restaurantAuthSlice = createSlice({
       .addCase(registerRestaurant.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
 
   },
 });
