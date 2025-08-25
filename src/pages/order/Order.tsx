@@ -100,60 +100,60 @@ const handleConfirmOrder = async (orderId: number, paymentMethod: string, addres
             ))}
           </div>
         )}
-{confirmingOrder && (
-  <div className="fixed inset-0 flex items-center justify-center z-50">
-    {/* Fundo desfocado */}
-    <div className="absolute inset-0 backdrop-blur-sm"></div>
-
-    <div className="relative bg-white rounded-lg p-6 w-96 z-10">
-      <h2 className="text-lg font-semibold mb-4">
-        Confirmar Pedido #{confirmingOrder.id}
-      </h2>
-
-      <label className="block mb-2 text-sm font-medium">Forma de pagamento</label>
-      <select
-        id="payment-method"
-        className="w-full border border-gray-300 rounded-md p-2 mb-4"
-      >
-        <option>Cartão de crédito</option>
-        <option>Dinheiro</option>
-        <option>PIX</option>
-      </select>
-
-      <label className="block mb-2 text-sm font-medium">Endereço</label>
-      <input
-        type="text"
-        defaultValue={user?.address || ""}
-        className="w-full border border-gray-300 rounded-md p-2 mb-4"
-        id="order-address"
-      />
-
-      <div className="flex justify-end space-x-2">
-        <button
-          onClick={() => setConfirmingOrder(null)}
-          className="px-3 py-1 bg-gray-300 rounded-lg hover:bg-gray-400 text-sm"
-        >
-          Cancelar
-        </button>
-        <button
-          onClick={() => {
-            const payment = (document.getElementById(
-              "payment-method"
-            ) as HTMLSelectElement).value;
-            const address = (document.getElementById(
-              "order-address"
-            ) as HTMLInputElement).value;
-
-            handleConfirmOrder(confirmingOrder.id, payment, address);
-          }}
-          className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm"
-        >
-          Confirmar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      {confirmingOrder && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          {/* Fundo desfocado */}
+          <div className="absolute inset-0 backdrop-blur-sm"></div>
+      
+          <div className="relative bg-white rounded-lg p-6 w-96 z-10">
+            <h2 className="text-lg font-semibold mb-4">
+              Confirmar Pedido #{confirmingOrder.id}
+            </h2>
+      
+            <label className="block mb-2 text-sm font-medium">Forma de pagamento</label>
+            <select
+              id="payment-method"
+              className="w-full border border-gray-300 rounded-md p-2 mb-4"
+            >
+              <option>Cartão de crédito</option>
+              <option>Dinheiro</option>
+              <option>PIX</option>
+            </select>
+      
+            <label className="block mb-2 text-sm font-medium">Endereço</label>
+            <input
+              type="text"
+              defaultValue={user?.address || ""}
+              className="w-full border border-gray-300 rounded-md p-2 mb-4"
+              id="order-address"
+            />
+      
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setConfirmingOrder(null)}
+                className="px-3 py-1 bg-gray-300 rounded-lg hover:bg-gray-400 text-sm"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  const payment = (document.getElementById(
+                    "payment-method"
+                  ) as HTMLSelectElement).value;
+                  const address = (document.getElementById(
+                    "order-address"
+                  ) as HTMLInputElement).value;
+                
+                  handleConfirmOrder(confirmingOrder.id, payment, address);
+                }}
+                className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       </div>
     </div>
