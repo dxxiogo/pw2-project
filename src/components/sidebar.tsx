@@ -20,9 +20,6 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
   const navItems: NavItem[] = [
     { icon: Home, label: 'Home', href: '/home' },
     { icon: ShoppingCart, label: 'Carrinho', href: '/order' },
-    { icon: Search, label: 'Buscar', href: '/buscar' },
-    { icon: CreditCard, label: 'Pagamentos', href: '/pagamentos' },
-    { icon: FileText, label: 'Documentos', href: '/documentos' },
     { icon: LogOut, label: 'Sair', href: '/welcomepage' }
   ];
 
@@ -44,7 +41,7 @@ const Sidebar = ({ onNavigation }: SidebarProps) => {
   };
 
   return (
-    <nav className="w-16 bg-red-600 flex flex-col items-center py-4 h-full fixed shadow-lg z-30">
+    <nav className="w-16 bg-red-600  flex flex-col items-center py-4 h-screen fixed top-0 left-0 shadow-lg z-30">
       <div className="flex flex-col items-center space-y-6 flex-1">
         {navItems.slice(0, -1).map((item, index) => {
           const IconComponent = item.icon;

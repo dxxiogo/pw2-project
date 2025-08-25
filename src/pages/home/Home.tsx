@@ -22,6 +22,13 @@ type Restaurant = {
   reviews: number;
 };
 
+type Review = {
+  id: number;
+  restaurantId: number;
+  rating: number;
+  comment: string;
+};
+
 export default function Home() {
   const [items, setItems] = useState<Item[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -44,25 +51,27 @@ export default function Home() {
       .then((res) => {
         if (!res.ok) throw new Error("Falha ao carregar restaurantes");
         return res.json();
-      }).then(async (restaurantsData: Restaurant[]) => {
-      // Buscar todas as reviews de cada restaurante
-      const updatedRestaurants = await Promise.all(
-        restaurantsData.map(async (rest) => {
-          const res = await fetch(`http://localhost:3001/reviews?restaurantId=${rest.id}`);
-          const reviews = await res.json();
-          let rating = rest.rating;
-          if (reviews.length > 0) {
-            rating = reviews.reduce((acc: number, r: Restaurant) => acc + r.rating, 0) / reviews.length;
-          }
-          return { ...rest, rating, reviews: reviews.length };
-        })
-      );
-      setRestaurants(updatedRestaurants);
-    })
-    .catch((err) => setError(err.message))
-    .finally(() => setLoadingRestaurants(false));
-      
-      
+      })
+      .then(async (restaurantsData: Restaurant[]) => {
+        const updatedRestaurants = await Promise.all(
+          restaurantsData.map(async (rest) => {
+            const res = await fetch(
+              `http://localhost:3001/reviews?restaurantId=${rest.id}`
+            );
+            const reviews: Review[] = await res.json();
+            let rating = rest.rating;
+            if (reviews.length > 0) {
+              rating =
+                reviews.reduce((acc, r) => acc + r.rating, 0) /
+                reviews.length;
+            }
+            return { ...rest, rating, reviews: reviews.length };
+          })
+        );
+        setRestaurants(updatedRestaurants);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoadingRestaurants(false));
   }, []);
 
   // filtros de busca
@@ -74,15 +83,15 @@ export default function Home() {
     r.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-    const restaurantMap = Object.fromEntries(
+  const restaurantMap = Object.fromEntries(
     restaurants.map((r) => [r.id, r.name])
   );
-  
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="flex-1 bg-white">
+      <div className="flex-1 bg-white ml-16"> {/* dá espaço pro sidebar */}
         <HeaderSearch
           location="Cajazeiras, PB"
           placeholder="Busque restaurantes ou itens..."
@@ -91,6 +100,7 @@ export default function Home() {
 
         {error && <p className="text-red-600 p-4">{error}</p>}
 
+        {/* Itens */}
         <section className="mt-8 px-8">
           <h2 className="text-xl font-bold mb-4">Itens populares</h2>
           {loadingItems ? (
@@ -99,7 +109,11 @@ export default function Home() {
             <div className="flex gap-4 overflow-x-auto">
               {filteredItems.map((item) => (
                 <Link key={item.id} to={`/item/${item.id}`} className="block">
-                  <ItemPreview name={item.name} image={item.image} description={restaurantMap[item.restaurantId]} />
+                  <ItemPreview
+                    name={item.name}
+                    image={item.image}
+                    description={restaurantMap[item.restaurantId]}
+                  />
                 </Link>
               ))}
             </div>
@@ -108,21 +122,32 @@ export default function Home() {
           )}
         </section>
 
- <section className="mt-8 px-8">
+        {/* Restaurantes */}
+        <section className="mt-8 px-8">
           <h2 className="text-xl font-bold mb-4">Restaurantes</h2>
-          <div className="flex gap-4 overflow-x-auto">
-            {restaurants.map((rest: Restaurant) => (
-              <Link key={rest.id} to={`/restaurant/${rest.id}`} className="block">
-                <RestaurantPreview
-                  name={rest.name}
-                  image={rest.image}
-                  rating={Number(rest.rating.toFixed(1))}
-                  reviews={rest.reviews}
-                  description={rest.description}
-                />
-              </Link>
-            ))}
-          </div>
+          {loadingRestaurants ? (
+            <p>Carregando restaurantes...</p>
+          ) : filteredRestaurants.length > 0 ? (
+            <div className="flex gap-4 overflow-x-auto">
+              {filteredRestaurants.map((rest: Restaurant) => (
+                <Link
+                  key={rest.id}
+                  to={`/restaurant/${rest.id}`}
+                  className="block"
+                >
+                  <RestaurantPreview
+                    name={rest.name}
+                    image={rest.image}
+                    rating={Number(rest.rating.toFixed(1))}
+                    reviews={rest.reviews}
+                    description={rest.description}
+                  />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p>Nenhum restaurante encontrado.</p>
+          )}
         </section>
       </div>
     </div>

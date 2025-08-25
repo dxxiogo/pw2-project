@@ -119,7 +119,7 @@ export default function Restaurant() {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex-1 bg-white w-full p-8 space-y-8">
+      <div className="flex-1 bg-white w-full p-8 space-y-8 ml-10 -mt-5">
 
         {/* Cabeçalho do restaurante */}
         <section className="flex gap-8 items-center">

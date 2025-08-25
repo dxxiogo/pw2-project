@@ -91,9 +91,9 @@ export default function AppRouter() {
         <Route
           path="/restaurant/:id"
           element={
-            <PrivateRestaurantRoute>
+            <PrivateUserRoute>
               <Restaurant />
-            </PrivateRestaurantRoute>
+            </PrivateUserRoute>
           }
         />
         <Route

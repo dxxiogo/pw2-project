@@ -74,7 +74,7 @@ export default function Item() {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="flex-1 bg-white flex flex-col items-center py-10">
+      <div className="flex-1 bg-white flex flex-col items-center py-10 ">
         <img
           src={item.image}
           alt={item.name}
