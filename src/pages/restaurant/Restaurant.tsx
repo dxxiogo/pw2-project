@@ -29,18 +29,40 @@ type RestaurantData = {
   items: number[];
 };
 
+// 🔥 StarRating ajustado para mostrar meia estrela
 const StarRating = ({ rating }: { rating: number }) => {
+  if (!rating) rating = 0;
+
   const fullStars = Math.floor(rating);
-  const halfStar = rating - fullStars >= 0.5;
+  const hasHalfStar = rating % 1 !== 0;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (
     <div className="flex gap-1 text-yellow-400 items-center">
-      {Array.from({ length: 5 }, (_, i) => {
-        if (i < fullStars) return <Star key={i} className="w-5 h-5 fill-current" />;
-        if (i === fullStars && halfStar) return <Star key={i} className="w-5 h-5 fill-yellow-400/50" />;
-        return <Star key={i} className="w-5 h-5 text-gray-300" />;
-      })}
-      <span className="ml-2 text-sm font-medium text-gray-900">{rating}</span>
+      {/* estrelas cheias */}
+      {Array.from({ length: fullStars }).map((_, i) => (
+        <Star key={`full-${i}`} className="w-5 h-5 fill-current" />
+      ))}
+
+      {/* meia estrela */}
+      {hasHalfStar && (
+        <div className="relative w-5 h-5">
+          <Star className="w-5 h-5 text-gray-300 fill-current absolute top-0 left-0" />
+          <div className="absolute top-0 left-0 w-1/2 overflow-hidden">
+            <Star className="w-5 h-5 text-yellow-400 fill-current" />
+          </div>
+        </div>
+      )}
+
+      {/* estrelas vazias */}
+      {Array.from({ length: emptyStars }).map((_, i) => (
+        <Star key={`empty-${i}`} className="w-5 h-5 text-gray-300 fill-current" />
+      ))}
+
+      {/* número ao lado */}
+      <span className="ml-2 text-sm font-medium text-gray-900">
+        {rating.toFixed(1)}
+      </span>
     </div>
   );
 };
@@ -121,7 +143,6 @@ export default function Restaurant() {
       <Sidebar />
       <div className="flex-1 bg-white w-full p-8 space-y-8 ml-10 -mt-5">
 
-        {/* Cabeçalho do restaurante */}
         <section className="flex gap-8 items-center">
           <div className="w-1/3 h-96 flex-shrink-0">
             <img
@@ -133,8 +154,12 @@ export default function Restaurant() {
           <div className="flex-1 space-y-2">
             <h1 className="text-3xl font-bold">{restaurant.name}</h1>
             <p className="text-gray-600">{restaurant.description}</p>
-            <StarRating rating={restaurant.rating} />
-            <p className="text-sm text-gray-500">{restaurant.reviews} avaliações</p>
+
+            {/* usa o StarRating aqui */}
+            <div className="flex items-center space-x-2">
+              <StarRating rating={restaurant.rating} />
+              <p className="text-sm text-gray-500">{restaurant.reviews} avaliações</p>
+            </div>
           </div>
         </section>
 
