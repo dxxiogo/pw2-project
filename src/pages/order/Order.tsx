@@ -13,7 +13,6 @@ export default function OrdersPage() {
     delivered: "pedido entregue com sucesso",
   };
 
-  // carregar pedidos pendentes do usuário
   useEffect(() => {
     if (!user?.id) return;
 

@@ -14,21 +14,35 @@ export default function ItemForm() {
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const { items, loading, error } = useSelector((state: RootState) => state.items);
   const restaurant = JSON.parse(localStorage.getItem("restaurant") || "{}");
 
-
+  // 🔹 Buscar o item direto na API se for edição
   useEffect(() => {
-    if (id) {
-      const item = items.find((i) => i.id === Number(id));
-      if (item) {
-        setName(item.name);
-        setPrice(item.price);
-        setImage(item.image);
+    const loadItem = async () => {
+      if (id) {
+        // tenta pegar do Redux primeiro
+        let item = items.find((i) => i.id === Number(id));
+
+        if (!item) {
+          // se não achar, busca direto na API
+          const res = await fetch(`http://localhost:3001/items/${id}`);
+          if (res.ok) {
+            item = await res.json();
+          }
+        }
+
+        if (item) {
+          setName(item.name);
+          setPrice(item.price);
+          setImage(item.image);
+        }
       }
-    }
+    };
+
+    loadItem();
   }, [id, items]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -40,7 +54,7 @@ export default function ItemForm() {
     }
 
     if (id) {
-      
+      // 🔹 Atualização
       const result = await dispatch(
         updateItem({
           id: Number(id),
@@ -56,7 +70,7 @@ export default function ItemForm() {
         navigate(`/restaurant/home`);
       }
     } else {
-      
+      // 🔹 Criação
       const result = await dispatch(
         createItem({
           name,
@@ -87,20 +101,20 @@ export default function ItemForm() {
             <PlaceholderInput
               placeholder="Nome do item"
               value={name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
 
             <PlaceholderInput
               placeholder="Preço"
               value={price.toString()}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrice(e.target.value)}
+              onChange={(e) => setPrice(e.target.value)}
               type="number"
             />
 
             <PlaceholderInput
               placeholder="URL da imagem"
               value={image}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.value)}
+              onChange={(e) => setImage(e.target.value)}
             />
 
             {error && <p className="text-red-600">{error}</p>}

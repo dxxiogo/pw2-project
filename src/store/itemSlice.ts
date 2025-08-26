@@ -26,6 +26,7 @@ const initialState: ItemsState = {
 export const createItem = createAsyncThunk<Item, Omit<Item, "id">>(
   "items/createItem",
   async (newItem) => {
+
     const res = await fetch("http://localhost:3001/items", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,7 +38,8 @@ export const createItem = createAsyncThunk<Item, Omit<Item, "id">>(
   }
 );
 
-// Buscar item por id
+
+
 export const fetchItemById = createAsyncThunk<Item, number>(
   "items/fetchItemById",
   async (id) => {
@@ -47,7 +49,6 @@ export const fetchItemById = createAsyncThunk<Item, number>(
   }
 );
 
-// Atualizar item
 export const updateItem = createAsyncThunk<Item, Item>(
   "items/updateItem",
   async (item) => {
@@ -62,7 +63,6 @@ export const updateItem = createAsyncThunk<Item, Item>(
   }
 );
 
-// Deletar item
 export const deleteItem = createAsyncThunk<number, number>(
   "items/deleteItem",
   async (id) => {
@@ -105,7 +105,6 @@ const itemsSlice = createSlice({
         state.error = action.error.message || "Erro ao criar item";
       })
 
-      // Buscar item por id
       .addCase(fetchItemById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -120,7 +119,6 @@ const itemsSlice = createSlice({
         state.error = action.error.message || "Erro ao carregar item";
       })
 
-      // Atualizar item
       .addCase(updateItem.fulfilled, (state, action: PayloadAction<Item>) => {
         state.loading = false;
         state.currentItem = action.payload;
@@ -129,7 +127,6 @@ const itemsSlice = createSlice({
         );
       })
 
-      // Deletar item
       .addCase(deleteItem.fulfilled, (state, action: PayloadAction<number>) => {
         state.loading = false;
         state.items = state.items.filter((i) => i.id !== action.payload);

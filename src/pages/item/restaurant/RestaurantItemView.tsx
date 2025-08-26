@@ -1,66 +1,93 @@
 import FilledButton from "@/components/filled-button.tsx";
-import Sidebar from "@/components/sidebar.tsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchItemById, deleteItem } from "@/store/itemSlice.ts";
-import type { RootState, AppDispatch } from "@/store/store.ts"; 
+import RestaurantSidebar from "@/components/restaurant-sidebar.tsx";
+
+type Item = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  restaurantId: number;
+};
 
 export default function RestaurantItemView() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { currentItem, loading } = useSelector((state: RootState) => state.items);
+  const [item, setItem] = useState<Item | null>(null);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchItemById(Number(id)));
-    }
-  }, [id, dispatch]);
+    if (!id) return;
+
+    const fetchItem = async () => {
+      try {
+        const res = await fetch(`http://localhost:3001/items/${id}`);
+        if (!res.ok) throw new Error("Erro ao buscar item");
+        const data: Item = await res.json();
+        setItem(data);
+      } catch (error) {
+        console.error(error);
+        setItem(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, [id]);
 
   const handleDelete = async () => {
-    if (!currentItem) return;
+    if (!item) return;
 
     const confirmDelete = window.confirm("Tem certeza que deseja excluir este item?");
     if (!confirmDelete) return;
 
-    const result = await dispatch(deleteItem(currentItem.id));
+    try {
+      const res = await fetch(`http://localhost:3001/items/${item.id}`, {
+        method: "DELETE",
+      });
 
-    if (deleteItem.fulfilled.match(result)) {
-      alert("Item deletado com sucesso!");
-      navigate(`/restaurant/home`);
-    } else {
+      if (res.ok) {
+        alert("Item deletado com sucesso!");
+        navigate("/restaurant/home");
+      } else {
+        alert("Erro ao deletar item");
+      }
+    } catch (error) {
+      console.error(error);
       alert("Erro ao deletar item");
     }
   };
 
   const handleUpdate = () => {
-    if (!currentItem) return;
-    navigate(`/restaurant/edit-item//${currentItem.id}`);
+    if (!item) return;
+    navigate(`/restaurant/edit-item/${item.id}`);
   };
 
   if (loading) return <p>Carregando item...</p>;
-  if (!currentItem) return <p>Item não encontrado</p>;
+  if (!item) return <p>Item não encontrado</p>;
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
+      <RestaurantSidebar />
 
       <div className="flex-1 bg-white flex flex-col items-center py-10">
         <img
-          src={currentItem.image}
-          alt={currentItem.name}
+          src={item.image}
+          alt={item.name}
           className="rounded-xl w-[600px] h-[220px] object-cover mb-8"
         />
 
         <div className="w-[600px]">
-          <h1 className="text-2xl font-bold mb-4">{currentItem.name}</h1>
+          <h1 className="text-2xl font-bold mb-4">{item.name}</h1>
           <p className="text-lg text-gray-700 mb-2">
-            Preço: R$ {currentItem.price.toFixed(2)}
+            Preço: R$ {item.price.toFixed(2)}
           </p>
           <p className="text-sm text-gray-500 mb-8">
-            ID do restaurante: {currentItem.restaurantId}
+            ID do restaurante: {item.restaurantId}
           </p>
 
           <div className="flex gap-4">

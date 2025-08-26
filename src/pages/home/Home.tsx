@@ -29,6 +29,18 @@ type Review = {
   comment: string;
 };
 
+// Função utilitária para buscar do cache
+async function fetchFromCache(url: string) {
+  if ("caches" in window) {
+    const cache = await caches.open("api-cache");
+    const cachedResponse = await cache.match(url);
+    if (cachedResponse) {
+      return cachedResponse.json();
+    }
+  }
+  throw new Error("Sem conexão e sem cache disponível");
+}
+
 export default function Home() {
   const [items, setItems] = useState<Item[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -38,15 +50,24 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
+    // Itens
     fetch("http://localhost:3001/items")
       .then((res) => {
         if (!res.ok) throw new Error("Falha ao carregar itens");
         return res.json();
       })
       .then((data: Item[]) => setItems(data))
-      .catch((err) => setError(err.message))
+      .catch(async (err) => {
+        try {
+          const cached = await fetchFromCache("http://localhost:3001/items");
+          setItems(cached);
+        } catch (cacheErr) {
+          setError(err.message);
+        }
+      })
       .finally(() => setLoadingItems(false));
 
+    // Restaurantes
     fetch("http://localhost:3001/restaurants")
       .then((res) => {
         if (!res.ok) throw new Error("Falha ao carregar restaurantes");
@@ -55,22 +76,34 @@ export default function Home() {
       .then(async (restaurantsData: Restaurant[]) => {
         const updatedRestaurants = await Promise.all(
           restaurantsData.map(async (rest) => {
-            const res = await fetch(
-              `http://localhost:3001/reviews?restaurantId=${rest.id}`
-            );
-            const reviews: Review[] = await res.json();
-            let rating = rest.rating;
-            if (reviews.length > 0) {
-              rating =
-                reviews.reduce((acc, r) => acc + r.rating, 0) /
-                reviews.length;
+            try {
+              const res = await fetch(
+                `http://localhost:3001/reviews?restaurantId=${rest.id}`
+              );
+              const reviews: Review[] = await res.json();
+              let rating = rest.rating;
+              if (reviews.length > 0) {
+                rating =
+                  reviews.reduce((acc, r) => acc + r.rating, 0) /
+                  reviews.length;
+              }
+              return { ...rest, rating, reviews: reviews.length };
+            } catch {
+              // Se offline, não atualiza rating/reviews
+              return rest;
             }
-            return { ...rest, rating, reviews: reviews.length };
           })
         );
         setRestaurants(updatedRestaurants);
       })
-      .catch((err) => setError(err.message))
+      .catch(async (err) => {
+        try {
+          const cached = await fetchFromCache("http://localhost:3001/restaurants");
+          setRestaurants(cached);
+        } catch (cacheErr) {
+          setError(err.message);
+        }
+      })
       .finally(() => setLoadingRestaurants(false));
   }, []);
 
@@ -91,7 +124,7 @@ export default function Home() {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="flex-1 bg-white ml-16"> {/* dá espaço pro sidebar */}
+      <div className="flex-1 bg-white ml-16">
         <HeaderSearch
           location="Cajazeiras, PB"
           placeholder="Busque restaurantes ou itens..."
@@ -138,7 +171,7 @@ export default function Home() {
                   <RestaurantPreview
                     name={rest.name}
                     image={rest.image}
-                    rating={Number(rest.rating.toFixed(1))}
+                    rating={Number(rest.rating?.toFixed(1))}
                     reviews={rest.reviews}
                     description={rest.description}
                   />
