@@ -76,13 +76,6 @@
   ],
   "items": [
     {
-      "id": "1",
-      "restaurantId": 1,
-      "name": "Pizza de Mussarela",
-      "price": 35,
-      "image": "/assets/pizza.jpeg"
-    },
-    {
       "id": "2",
       "restaurantId": 1,
       "name": "Panqueca",
@@ -217,6 +210,18 @@
       "restaurantId": "1",
       "rating": 5,
       "text": "teste"
+    },
+    {
+      "id": "b192",
+      "restaurantId": "1",
+      "rating": 4,
+      "text": "muito bom"
+    },
+    {
+      "id": "9656",
+      "restaurantId": "1",
+      "rating": 1,
+      "text": "muitoruim"
     }
   ]
 }
